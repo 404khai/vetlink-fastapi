@@ -19,9 +19,13 @@ class UserRequest(UserBase):
 
 
 class UserResponse(UserBase):
-    id: int
+    iid: int
+    name: str
+    email: EmailStr
     role: UserRole
     createdAt: datetime
+    petOwnerProfile: Optional["PetOwnerResponse"] = None
+    vetProfile: Optional["VetResponse"] = None
 
     class Config:
         orm_mode = True
@@ -32,11 +36,11 @@ class UserResponse(UserBase):
 # =====================================================
 
 class PetBase(BaseModel):
-    petName: str
-    petAge: int
-    petType: str
-    petWeight: str
-    petBreed: str
+    name: str
+    type: str
+    age: Optional[int]
+    breed: Optional[str]
+    weight: Optional[str]
 
 
 class PetRequest(PetBase):
@@ -45,7 +49,7 @@ class PetRequest(PetBase):
 
 class PetResponse(PetBase):
     id: int
-    userId: int
+    ownerId: int
 
     class Config:
         orm_mode = True

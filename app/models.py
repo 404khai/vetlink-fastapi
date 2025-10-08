@@ -18,8 +18,7 @@ class User(Base):
 
     petOwnerProfile = relationship("PetOwner", uselist=False, back_populates="user")
     vetProfile = relationship("Vet", uselist=False, back_populates="user")
-    comments = relationship("Comment", back_populates="user", cascade="all, delete-orphan")
-
+    
 
 class PetOwner(Base):
     __tablename__ = "petOwners"
@@ -55,7 +54,7 @@ class Pet(Base):
     age = Column(Integer, nullable=True)
     breed = Column(String, nullable=True)
     weight = Column(String, nullable=True)
-    ownerId = Column(Integer, ForeignKey("pet_owners.id", ondelete="CASCADE"))
+    ownerId = Column(Integer, ForeignKey("petOwners.id", ondelete="CASCADE"))
 
     owner = relationship("PetOwner", back_populates="pets")
     appointments = relationship("Appointment", back_populates="pet", cascade="all, delete-orphan")
@@ -69,7 +68,7 @@ class Appointment(Base):
     scheduledFor = Column(DateTime, nullable=False)
     status = Column(Enum(AppointmentStatus), default=AppointmentStatus.PENDING)
 
-    petOwnerId = Column(Integer, ForeignKey("pet_owners.id", ondelete="CASCADE"))
+    petOwnerId = Column(Integer, ForeignKey("petOwners.id", ondelete="CASCADE"))
     vetId = Column(Integer, ForeignKey("vets.id", ondelete="CASCADE"))
     petId = Column(Integer, ForeignKey("pets.id", ondelete="CASCADE"))
 
@@ -86,7 +85,7 @@ class Booking(Base):
     createdAt = Column(DateTime, default=datetime.utcnow, nullable=False)
     status = Column(Enum(AppointmentStatus), default=AppointmentStatus.PENDING)
 
-    petOwnerId = Column(Integer, ForeignKey("pet_owners.id", ondelete="CASCADE"))
+    petOwnerId = Column(Integer, ForeignKey("petOwners.id", ondelete="CASCADE"))
     vetId = Column(Integer, ForeignKey("vets.id", ondelete="CASCADE"))
     petId = Column(Integer, ForeignKey("pets.id", ondelete="CASCADE"))
 

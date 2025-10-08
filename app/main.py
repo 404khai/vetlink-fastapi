@@ -6,7 +6,7 @@ from routes import userRoutes
 models.Base.metadata.create_all(bind=database.engine)
 
 # Initialize FastAPI app
-app = FastAPI(title="User Management API")
+app = FastAPI(title="User Management API", docs_url="/docs")
 
 # CORS
 app.add_middleware(
