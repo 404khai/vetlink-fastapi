@@ -82,7 +82,7 @@ class VetBase(BaseModel):
     bio: Optional[str] = None
 
 
-class VetCreate(VetBase):
+class VetRequest(VetBase):
     pass
 
 
@@ -103,7 +103,7 @@ class AppointmentBase(BaseModel):
     status: Optional[AppointmentStatus] = AppointmentStatus.PENDING
 
 
-class AppointmentCreate(AppointmentBase):
+class AppointmentRequest(AppointmentBase):
     petOwnerId: int
     vetId: int
 

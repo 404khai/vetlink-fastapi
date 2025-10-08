@@ -11,13 +11,11 @@ class User(Base):
     id = Column(Integer, primary_key=True, index=True)
     name = Column(String, nullable=False)
     email = Column(String, unique=True, index=True, nullable=False)
-    password = Column(String, nullable=True)  # Optional for Google users
+    password = Column(String, nullable=True)
     googleId = Column(String, unique=True, nullable=True)
-
     role = Column(Enum(UserRole), nullable=False, default=UserRole.PET_OWNER)
     createdAt = Column(DateTime, default=datetime.utcnow, nullable=False)
 
-    # relationships
     petOwnerProfile = relationship("PetOwner", uselist=False, back_populates="user")
     vetProfile = relationship("Vet", uselist=False, back_populates="user")
     comments = relationship("Comment", back_populates="user", cascade="all, delete-orphan")
@@ -32,6 +30,7 @@ class PetOwner(Base):
     user = relationship("User", back_populates="petOwnerProfile")
     pets = relationship("Pet", back_populates="owner", cascade="all, delete-orphan")
     appointments = relationship("Appointment", back_populates="petOwner", cascade="all, delete-orphan")
+    bookings = relationship("Booking", back_populates="petOwner", cascade="all, delete-orphan")
 
 
 class Vet(Base):
@@ -44,6 +43,7 @@ class Vet(Base):
 
     user = relationship("User", back_populates="vetProfile")
     appointments = relationship("Appointment", back_populates="vet", cascade="all, delete-orphan")
+    bookings = relationship("Booking", back_populates="vet", cascade="all, delete-orphan")
 
 
 class Pet(Base):
@@ -92,4 +92,4 @@ class Booking(Base):
 
     petOwner = relationship("PetOwner", back_populates="bookings")
     vet = relationship("Vet", back_populates="bookings")
-    pet = relationship("Pet", back_populates="bookings")
+    pet = relationship("Pet")
