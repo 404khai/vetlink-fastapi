@@ -12,7 +12,7 @@ class UserBase(BaseModel):
     email: EmailStr
 
 
-class UserCreate(UserBase):
+class UserRequest(UserBase):
     password: Optional[str] = None  # Optional to allow Google OAuth users
     googleId: Optional[str] = None
     role: UserRole = UserRole.PET_OWNER
@@ -33,10 +33,13 @@ class UserResponse(UserBase):
 
 class PetBase(BaseModel):
     petName: str
+    petAge: int
     petType: str
+    petWeight: str
+    petBreed: str
 
 
-class PetCreate(PetBase):
+class PetRequest(PetBase):
     pass
 
 
@@ -56,7 +59,7 @@ class PetOwnerBase(BaseModel):
     userId: int
 
 
-class PetOwnerCreate(PetOwnerBase):
+class PetOwnerRequest(PetOwnerBase):
     petId: int
 
 
