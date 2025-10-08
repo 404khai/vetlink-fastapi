@@ -12,7 +12,7 @@ class User(Base):
     email = Column(String, unique=True, index=True, nullable=False)
     password = Column(String, nullable=False)
 
-    posts = relationship("Posts", back_populates="owner")
+    petOwners = relationship("PetOwner", back_populates="owner")
     comments = relationship("Comments", back_populates="owner")
 
 
