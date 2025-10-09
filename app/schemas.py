@@ -1,7 +1,7 @@
 from pydantic import BaseModel, EmailStr
 from typing import List, Optional
-from datetime import datetime
-from .enums import UserRole, AppointmentStatus
+from datetime import datetime, date, time
+from .enums import UserRole, AppointmentStatus, AppointmentType
 
 # =====================================================
 # USER SCHEMAS
@@ -47,6 +47,15 @@ class UserResponse(UserBase):
     class Config:
         orm_mode = True
 
+
+class SimpleUserResponse(BaseModel):
+    id: int
+    name: Optional[str]
+    email: EmailStr
+    imageUrl: Optional[str] = None
+
+    class Config:
+        orm_mode = True
 
 # =====================================================
 # PET SCHEMAS
@@ -97,7 +106,7 @@ class PetOwnerRequest(PetOwnerBase):
 
 class PetOwnerResponse(PetOwnerBase):
     id: int
-    user: UserResponse
+    user: SimpleUserResponse
     pets: List[PetResponse] = []
 
     class Config:
@@ -120,10 +129,11 @@ class VetRequest(VetBase):
 
 class VetResponse(VetBase):
     id: int
-    user: UserResponse
+    user: SimpleUserResponse
 
     class Config:
         orm_mode = True
+
 
 
 # =====================================================
@@ -131,20 +141,18 @@ class VetResponse(VetBase):
 # =====================================================
 
 class AppointmentBase(BaseModel):
-    scheduledFor: datetime
-    status: Optional[AppointmentStatus] = AppointmentStatus.PENDING
-
-
-class AppointmentRequest(AppointmentBase):
-    petOwnerId: int
+    scheduledDate: date
+    scheduledTime: time
+    appointmentType: AppointmentType
+    petId: int
     vetId: int
 
+class AppointmentCreate(AppointmentBase):
+    pass
 
 class AppointmentResponse(AppointmentBase):
     id: int
-    createdAt: datetime
-    petOwner: Optional[PetOwnerResponse] = None
-    vet: Optional[VetResponse] = None
+    status: AppointmentStatus
 
     class Config:
         orm_mode = True
