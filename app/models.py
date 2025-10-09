@@ -1,15 +1,16 @@
 from sqlalchemy import Column, Integer, String, ForeignKey, DateTime, Enum
 from sqlalchemy.orm import relationship
 from datetime import datetime
-from .database import Base
-from enums import UserRole, AppointmentStatus
+from app.database import Base
+from app.enums import UserRole, AppointmentStatus
+
 
 
 class User(Base):
     __tablename__ = "users"
 
     id = Column(Integer, primary_key=True, index=True)
-    name = Column(String, nullable=False)
+    name = Column(String, nullable=True)
     email = Column(String, unique=True, index=True, nullable=False)
     password = Column(String, nullable=True)
     googleId = Column(String, unique=True, nullable=True)

@@ -1,7 +1,7 @@
 from pydantic import BaseModel, EmailStr
 from typing import List, Optional
 from datetime import datetime
-from enums import UserRole, AppointmentStatus
+from .enums import UserRole, AppointmentStatus
 
 # =====================================================
 # USER SCHEMAS
@@ -13,13 +13,14 @@ class UserBase(BaseModel):
 
 
 class UserRequest(UserBase):
+    email: EmailStr
     password: Optional[str] = None  # Optional to allow Google OAuth users
     googleId: Optional[str] = None
     role: UserRole = UserRole.PET_OWNER
 
 
 class UserResponse(UserBase):
-    iid: int
+    id: int
     name: str
     email: EmailStr
     role: UserRole
