@@ -1,7 +1,7 @@
 from pydantic import BaseModel, EmailStr
 from typing import List, Optional
-from datetime import datetime
-from .enums import UserRole, AppointmentStatus
+from datetime import datetime, date, time
+from .enums import UserRole, AppointmentStatus, AppointmentType
 
 # =====================================================
 # USER SCHEMAS
@@ -131,20 +131,18 @@ class VetResponse(VetBase):
 # =====================================================
 
 class AppointmentBase(BaseModel):
-    scheduledFor: datetime
-    status: Optional[AppointmentStatus] = AppointmentStatus.PENDING
-
-
-class AppointmentRequest(AppointmentBase):
-    petOwnerId: int
+    scheduledDate: date
+    scheduledTime: time
+    appointmentType: AppointmentType
+    petId: int
     vetId: int
 
+class AppointmentCreate(AppointmentBase):
+    pass
 
 class AppointmentResponse(AppointmentBase):
     id: int
-    createdAt: datetime
-    petOwner: Optional[PetOwnerResponse] = None
-    vet: Optional[VetResponse] = None
+    status: AppointmentStatus
 
     class Config:
         orm_mode = True

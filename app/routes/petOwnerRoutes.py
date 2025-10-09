@@ -76,6 +76,16 @@ def get_my_pets(db: Session = Depends(getDb), current_user=Depends(get_current_u
     return pet_owner.pets
 
 
+@router.get("/get_vets", response_model=list[schemas.VetResponse])
+def get_vets(db: Session = Depends(getDb), current_user=Depends(get_current_user)):
+    if current_user.role != "pet_owner":
+        raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail="Only pet owners can view all vets")
+    pet_owner = db.query(models.PetOwner).filter(models.PetOwner.userId == current_user.id).first()
+    vets = db.query(models.Vet).all()
+    if not pet_owner:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="PetOwner profile not found")
+
+    return vets
 # -----------------------------------------------------------
 # Delete a pet
 # -----------------------------------------------------------

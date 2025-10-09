@@ -1,8 +1,8 @@
-from sqlalchemy import Column, Float, Integer, String, ForeignKey, DateTime, Enum
+from sqlalchemy import Column, Float, Integer, String, ForeignKey, DateTime, Enum, Date, Time
 from sqlalchemy.orm import relationship
 from datetime import datetime
 from app.database import Base
-from app.enums import UserRole, AppointmentStatus
+from app.enums import AppointmentType, UserRole, AppointmentStatus
 
 class User(Base):
     __tablename__ = "users"
@@ -72,9 +72,17 @@ class Appointment(Base):
 
     id = Column(Integer, primary_key=True, index=True)
     createdAt = Column(DateTime, default=datetime.utcnow, nullable=False)
-    scheduledFor = Column(DateTime, nullable=False)
-    status = Column(Enum(AppointmentStatus), default=AppointmentStatus.PENDING)
 
+    # ✅ Split scheduledFor into separate fields
+    scheduledDate = Column(Date, nullable=False)
+    scheduledTime = Column(Time, nullable=False)
+
+    # ✅ New Enum field for appointment type
+    appointmentType = Column(Enum(AppointmentType), nullable=False)
+
+    status = Column(Enum(AppointmentStatus), default=AppointmentStatus.PENDING, nullable=False)
+
+    # ✅ Relationships
     petOwnerId = Column(Integer, ForeignKey("pet_owners.id", ondelete="CASCADE"))
     vetId = Column(Integer, ForeignKey("vets.id", ondelete="CASCADE"))
     petId = Column(Integer, ForeignKey("pets.id", ondelete="CASCADE"))

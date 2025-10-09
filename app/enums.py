@@ -6,7 +6,18 @@ class UserRole(str, Enum):
     ADMIN = "admin"
 
 
+class AppointmentType(str, Enum):
+    CHECKUP = "Checkup"
+    VACCINATION = "Vaccination"
+    GROOMING = "Grooming"
+    SURGERY = "Surgery"
+    EMERGENCY_CARE = "Emergency Care"
+    TREATMENT = "Treatment"
+    CONSULTATION = "Consultation"
+
+
 class AppointmentStatus(str, Enum):
-    PENDING = "pending"
-    APPROVED = "approved"
-    RESCHEDULED = "rescheduled"
+    PENDING = "Pending"
+    APPROVED = "Approved"
+    RESCHEDULED = "Rescheduled"
+    CANCELLED = "Cancelled"
