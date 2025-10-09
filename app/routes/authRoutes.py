@@ -53,36 +53,40 @@ def createUser(user: schemas.UserRequest, db: Session = Depends(getDb)):
     return {"access_token": token, "user": newUser}
 
 
-@router.post("/google")
-def googleLogin(token: str, db: Session = Depends(getDb)):
-    try:
-        id_info = id_token.verify_oauth2_token(token, requests.Request(), GOOGLE_CLIENT_ID)
-        email = id_info.get("email")
-        name = id_info.get("name")
-        google_id = id_info.get("sub")
-    except Exception:
-        raise HTTPException(status_code=400, detail="Invalid Google token")
+# @router.post("/google")
+# def googleLogin(token: str = Body(...), role: UserRole = Body(UserRole.PET_OWNER), db: Session = Depends(getDb)):
+#     try:
+#         id_info = id_token.verify_oauth2_token(token, requests.Request(), GOOGLE_CLIENT_ID)
+#         email = id_info.get("email")
+#         name = id_info.get("name")
+#         google_id = id_info.get("sub")
+#     except Exception:
+#         raise HTTPException(status_code=400, detail="Invalid Google token")
 
-    # Check if user exists
-    user = db.query(models.User).filter(models.User.email == email).first()
+#     # Check if user exists
+#     user = db.query(models.User).filter(models.User.email == email).first()
 
-    if not user:
-        # Create new user with PET_OWNER as default role
-        user = models.User(
-            name=name,
-            email=email,
-            googleId=google_id,
-            role=UserRole.PET_OWNER
-        )
-        db.add(user)
-        db.commit()
-        db.refresh(user)
-        db.add(models.PetOwner(userId=user.id))
-        db.commit()
+#     if not user:
+#         user = models.User(
+#             name=name,
+#             email=email,
+#             googleId=google_id,
+#             role=role  # 👈 use the role passed from frontend
+#         )
+#         db.add(user)
+#         db.commit()
+#         db.refresh(user)
 
-    # Create JWT token for app session
-    access_token = createAccessToken({"sub": str(user.id), "email": user.email})
-    return {"access_token": access_token, "token_type": "bearer", "user": user}
+#         # Create profile dynamically
+#         if role == UserRole.VET:
+#             db.add(models.Vet(userId=user.id))
+#         else:
+#             db.add(models.PetOwner(userId=user.id))
+#         db.commit()
+
+#     access_token = createAccessToken({"sub": str(user.id), "email": user.email})
+#     return {"access_token": access_token, "token_type": "bearer", "user": user}
+
 
 
 @router.post("/login", response_model=schemas.TokenResponse)
@@ -107,4 +111,14 @@ def login_user(request: schemas.LoginRequest, db: Session = Depends(getDb)):
         expires_delta=access_token_expires
     )
 
-    return {"access_token": access_token, "token_type": "bearer"}
+    # ✅ Return both token and user info
+    return {
+        "access_token": access_token,
+        "token_type": "bearer",
+        "user": {
+            "id": user.id,
+            "email": user.email,
+            "role": user.role.value,
+            "name": user.name
+        }
+    }

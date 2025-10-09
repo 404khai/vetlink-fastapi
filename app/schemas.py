@@ -10,9 +10,15 @@ class LoginRequest(BaseModel):
     email: EmailStr
     password: str
 
+class UserInfo(BaseModel):
+    id: int
+    email: str
+    role: str
+    name: str | None = None
 class TokenResponse(BaseModel):
     access_token: str
     token_type: str
+    user: UserInfo
     
 class UserBase(BaseModel):
     name: str
@@ -20,6 +26,7 @@ class UserBase(BaseModel):
 
 
 class UserRequest(UserBase):
+    name: Optional[str] = None
     email: EmailStr
     password: Optional[str] = None  # Optional to allow Google OAuth users
     googleId: Optional[str] = None
