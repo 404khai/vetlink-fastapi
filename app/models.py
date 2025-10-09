@@ -4,8 +4,6 @@ from datetime import datetime
 from app.database import Base
 from app.enums import UserRole, AppointmentStatus
 
-
-
 class User(Base):
     __tablename__ = "users"
 
