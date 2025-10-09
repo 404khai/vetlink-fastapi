@@ -1,8 +1,9 @@
 from sqlalchemy import Column, Integer, String, ForeignKey, DateTime, Enum
 from sqlalchemy.orm import relationship
 from datetime import datetime
-from .database import Base
-from enums import UserRole, AppointmentStatus
+from app.database import Base
+from app.enums import UserRole, AppointmentStatus
+
 
 
 class User(Base):

@@ -1,12 +1,12 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from app import models, database
-from routes import userRoutes
+from app.routes import userRoutes
 
 models.Base.metadata.create_all(bind=database.engine)
 
 # Initialize FastAPI app
-app = FastAPI(title="User Management API", docs_url="/docs")
+app = FastAPI(title="VetLink API", docs_url="/docs")
 
 # CORS
 app.add_middleware(

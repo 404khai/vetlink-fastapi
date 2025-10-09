@@ -2,7 +2,7 @@ from fastapi import APIRouter, Depends, HTTPException, status
 from sqlalchemy.orm import Session
 from app import models, schemas, database
 from app.utils.auth import hashPassword
-from enums import UserRole
+from app.enums import UserRole
 
 router = APIRouter(prefix="/users", tags=["Users"])
 
@@ -47,7 +47,7 @@ def createUser(user: schemas.UserRequest, db: Session = Depends(getDb)):
 
 @router.delete("/{userId}")
 def delete_user(userId: int, db: Session = Depends(getDb)):
-    user = db.query(models.Users).filter(models.Users.id == userId).first()
+    user = db.query(models.User).filter(models.User.id == userId).first()
     if not user:
         raise HTTPException(status_code=404, detail="User not found")
     db.delete(user)

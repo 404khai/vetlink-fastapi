@@ -1,7 +1,7 @@
 from pydantic import BaseModel, EmailStr
 from typing import List, Optional
 from datetime import datetime
-from enums import UserRole, AppointmentStatus
+from .enums import UserRole, AppointmentStatus
 
 # =====================================================
 # USER SCHEMAS
