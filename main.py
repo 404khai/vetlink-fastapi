@@ -1,7 +1,7 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from app import models, database
-from app.routes import userRoutes, authRoutes
+from app.routes import userRoutes, authRoutes, adminRoutes, petOwnerRoutes
 
 models.Base.metadata.create_all(bind=database.engine)
 
@@ -11,7 +11,11 @@ app = FastAPI(title="VetLink API", docs_url="/docs", redoc_url="/redoc", openapi
 # CORS
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],  
+    allow_origins=[
+        "http://localhost:5173",
+        "http://127.0.0.1:5173",
+    ],
+    allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
 )
@@ -19,6 +23,8 @@ app.add_middleware(
 # routes
 app.include_router(userRoutes.router)
 app.include_router(authRoutes.router)
+app.include_router(adminRoutes.router)
+app.include_router(petOwnerRoutes.router)
 
 
 # Root endpoint

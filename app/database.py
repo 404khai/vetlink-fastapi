@@ -21,3 +21,12 @@ SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
 
 # Base class for models
 Base = declarative_base()
+
+
+# ✅ Add this function so it can be imported anywhere
+def getDb():
+    db = SessionLocal()
+    try:
+        yield db
+    finally:
+        db.close()
