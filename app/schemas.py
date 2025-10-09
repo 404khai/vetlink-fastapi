@@ -31,6 +31,7 @@ class UserRequest(UserBase):
     password: Optional[str] = None  # Optional to allow Google OAuth users
     googleId: Optional[str] = None
     role: UserRole = UserRole.PET_OWNER
+    imageUrl: Optional[str] = None
 
 
 class UserResponse(UserBase):
@@ -39,6 +40,7 @@ class UserResponse(UserBase):
     email: EmailStr
     role: UserRole
     createdAt: datetime
+    imageUrl: Optional[str] = None
     petOwnerProfile: Optional["PetOwnerResponse"] = None
     vetProfile: Optional["VetResponse"] = None
 
@@ -50,21 +52,32 @@ class UserResponse(UserBase):
 # PET SCHEMAS
 # =====================================================
 
-class PetBase(BaseModel):
+class PetRequest(BaseModel):
     name: str
-    type: str
-    age: Optional[int]
-    breed: Optional[str]
-    weight: Optional[str]
+    species: str
+    breed: str
+    gender: str
+    age: str
+    weight: Optional[float]
+    color: str
+    microchip_number: Optional[str]
+    vaccination_status: Optional[str]
+    imageUrl: Optional[str] = None
 
 
-class PetRequest(PetBase):
-    pass
-
-
-class PetResponse(PetBase):
+class PetResponse(BaseModel):
     id: int
     ownerId: int
+    name: str
+    species: str
+    breed: str
+    gender: str
+    age: str
+    weight: Optional[float]
+    color: str
+    microchip_number: Optional[str]
+    vaccination_status: Optional[str]
+    imageUrl: Optional[str] = None
 
     class Config:
         orm_mode = True

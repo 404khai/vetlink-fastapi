@@ -13,6 +13,7 @@ class User(Base):
     password = Column(String, nullable=True)
     googleId = Column(String, unique=True, nullable=True)
     role = Column(Enum(UserRole), nullable=False, default=UserRole.PET_OWNER)
+    imageUrl = Column(String, nullable=True)
     createdAt = Column(DateTime, default=datetime.utcnow, nullable=False)
 
     petOwnerProfile = relationship("PetOwner", uselist=False, back_populates="user")
@@ -48,13 +49,14 @@ class Pet(Base):
     id = Column(Integer, primary_key=True, index=True)
     name = Column(String, nullable=False)
     species = Column(String, nullable=False)  # e.g., Dog, Cat, Bird (instead of generic 'type')
-    breed = Column(String, nullable=True)
-    gender = Column(String, nullable=True)  # "Male" / "Female"
-    age = Column(Integer, nullable=True)
+    breed = Column(String, nullable=False)
+    gender = Column(String, nullable=False)  # "Male" / "Female"
+    age = Column(String, nullable=False)
     weight = Column(Float, nullable=True)  # numeric type for better operations
-    color = Column(String, nullable=True)
+    color = Column(String, nullable=False)
     microchip_number = Column(String, unique=True, nullable=True)
     vaccination_status = Column(String, nullable=True)  # e.g. "Up-to-date", "Pending"
+    imageUrl = Column(String, nullable=True)
     # medical_notes = Column(Text, nullable=True)
     createdAt = Column(DateTime, default=datetime.utcnow, nullable=False)
 
