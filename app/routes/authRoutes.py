@@ -3,7 +3,7 @@ from sqlalchemy.orm import Session
 from google.oauth2 import id_token
 from google.auth.transport import requests
 from app import models, database, schemas
-from app.utils.auth import verifyPassword, createAccessToken
+from app.utils.auth import verifyPassword, createAccessToken, hashPassword
 from app.enums import UserRole
 import os
 from datetime import timedelta
@@ -18,6 +18,40 @@ def getDb():
         db.close()
 
 GOOGLE_CLIENT_ID = os.getenv("GOOGLE_CLIENT_ID")
+
+
+@router.post("/register")
+def createUser(user: schemas.UserRequest, db: Session = Depends(getDb)):
+    existingUser = db.query(models.User).filter(models.User.email == user.email).first()
+    if existingUser:
+        raise HTTPException(status_code=400, detail="Email already registered")
+
+    hashedPw = hashPassword(user.password) if user.password else None
+
+    newUser = models.User(
+        name=user.name,
+        email=user.email,
+        password=hashedPw,
+        googleId=user.googleId,
+        role=user.role,
+    )
+
+    db.add(newUser)
+    db.commit()
+    db.refresh(newUser)
+
+    # Role profile creation
+    if user.role == UserRole.PET_OWNER:
+        db.add(models.PetOwner(userId=newUser.id))
+    elif user.role == UserRole.VET:
+        db.add(models.Vet(userId=newUser.id))
+    db.commit()
+
+    # Generate JWT
+    token = createAccessToken({"sub": str(newUser.id), "email": newUser.email})
+
+    return {"access_token": token, "user": newUser}
+
 
 @router.post("/google")
 def googleLogin(token: str, db: Session = Depends(getDb)):
