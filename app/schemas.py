@@ -48,6 +48,15 @@ class UserResponse(UserBase):
         orm_mode = True
 
 
+class SimpleUserResponse(BaseModel):
+    id: int
+    name: Optional[str]
+    email: EmailStr
+    imageUrl: Optional[str] = None
+
+    class Config:
+        orm_mode = True
+
 # =====================================================
 # PET SCHEMAS
 # =====================================================
@@ -97,7 +106,7 @@ class PetOwnerRequest(PetOwnerBase):
 
 class PetOwnerResponse(PetOwnerBase):
     id: int
-    user: UserResponse
+    user: SimpleUserResponse
     pets: List[PetResponse] = []
 
     class Config:
@@ -120,10 +129,11 @@ class VetRequest(VetBase):
 
 class VetResponse(VetBase):
     id: int
-    user: UserResponse
+    user: SimpleUserResponse
 
     class Config:
         orm_mode = True
+
 
 
 # =====================================================

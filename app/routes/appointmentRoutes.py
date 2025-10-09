@@ -19,7 +19,7 @@ def getDb():
 # -----------------------------------------------------------
 # Create a new appointment (Pet Owner → Vet)
 # -----------------------------------------------------------
-@router.post("/", response_model=schemas.AppointmentResponse)
+@router.post("/new", response_model=schemas.AppointmentResponse)
 def create_appointment(
     appointment: schemas.AppointmentCreate,
     db: Session = Depends(getDb),
@@ -83,7 +83,7 @@ def create_appointment(
 # -----------------------------------------------------------
 # Get all appointments for the current user
 # -----------------------------------------------------------
-@router.get("/", response_model=list[schemas.AppointmentResponse])
+@router.get("/get_appointments", response_model=list[schemas.AppointmentResponse])
 def get_my_appointments(
     db: Session = Depends(getDb), current_user=Depends(get_current_user)
 ):

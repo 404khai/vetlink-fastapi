@@ -1,7 +1,7 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from app import models, database
-from app.routes import userRoutes, authRoutes, adminRoutes, petOwnerRoutes
+from app.routes import userRoutes, authRoutes, adminRoutes, petOwnerRoutes, appointmentRoutes
 
 models.Base.metadata.create_all(bind=database.engine)
 
@@ -25,6 +25,7 @@ app.include_router(userRoutes.router)
 app.include_router(authRoutes.router)
 app.include_router(adminRoutes.router)
 app.include_router(petOwnerRoutes.router)
+app.include_router(appointmentRoutes.router)
 
 
 # Root endpoint
