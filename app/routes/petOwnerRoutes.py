@@ -86,6 +86,26 @@ def get_vets(db: Session = Depends(getDb), current_user=Depends(get_current_user
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="PetOwner profile not found")
 
     return vets
+
+
+
+@router.get("/pets/{pet_id}", response_model=schemas.PetResponse)
+def get_pet_by_id(pet_id: int, db: Session = Depends(getDb), current_user=Depends(get_current_user)):
+    if current_user.role != "pet_owner":
+        raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail="Only pet owners can view pet details")
+
+    pet = (
+        db.query(models.Pet)
+        .join(models.PetOwner)
+        .filter(models.Pet.id == pet_id, models.PetOwner.userId == current_user.id)
+        .first()
+    )
+
+    if not pet:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Pet not found or not owned by you")
+
+    return pet
+
 # -----------------------------------------------------------
 # Delete a pet
 # -----------------------------------------------------------
