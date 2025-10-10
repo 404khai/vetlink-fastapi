@@ -17,7 +17,12 @@ class AppointmentType(str, Enum):
 
 
 class AppointmentStatus(str, Enum):
-    PENDING = "Pending"
-    APPROVED = "Approved"
-    RESCHEDULED = "Rescheduled"
-    CANCELLED = "Cancelled"
+    PENDING = "PENDING"
+    ACCEPTED = "ACCEPTED"
+    RESCHEDULED = "RESCHEDULED"
+    DECLINED = "DECLINED"
+    COMPLETED = "COMPLETED"
+
+class NotificationType(str, Enum):
+    APPOINTMENT_STATUS = "appointment_status"
+    REMINDER = "reminder"

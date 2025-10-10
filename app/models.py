@@ -1,8 +1,8 @@
-from sqlalchemy import Column, Float, Integer, String, ForeignKey, DateTime, Enum, Date, Time
+from sqlalchemy import Column, Float, Integer, String, ForeignKey, DateTime, Enum, Date, Time, Boolean
 from sqlalchemy.orm import relationship
 from datetime import datetime
 from app.database import Base
-from app.enums import AppointmentType, UserRole, AppointmentStatus
+from app.enums import AppointmentType, UserRole, AppointmentStatus, NotificationType
 
 class User(Base):
     __tablename__ = "users"
@@ -16,6 +16,7 @@ class User(Base):
     imageUrl = Column(String, nullable=True)
     createdAt = Column(DateTime, default=datetime.utcnow, nullable=False)
 
+    notifications = relationship("Notification", uselist=False, back_populates="user")
     petOwnerProfile = relationship("PetOwner", uselist=False, back_populates="user")
     vetProfile = relationship("Vet", uselist=False, back_populates="user")
     
@@ -81,6 +82,7 @@ class Appointment(Base):
     appointmentType = Column(Enum(AppointmentType), nullable=False)
 
     status = Column(Enum(AppointmentStatus), default=AppointmentStatus.PENDING, nullable=False)
+    
 
     # ✅ Relationships
     petOwnerId = Column(Integer, ForeignKey("pet_owners.id", ondelete="CASCADE"))
@@ -90,3 +92,17 @@ class Appointment(Base):
     petOwner = relationship("PetOwner", back_populates="appointments")
     vet = relationship("Vet", back_populates="appointments")
     pet = relationship("Pet", back_populates="appointments")
+
+
+class Notification(Base):
+    __tablename__ = "notifications"
+
+    id = Column(Integer, primary_key=True, index=True)
+    message = Column(String, nullable=False)
+    type = Column(Enum(NotificationType), nullable=False)
+    is_read = Column(Boolean, default=False)
+    created_at = Column(DateTime, default=datetime.utcnow)
+
+    # relationships
+    user_id = Column(Integer, ForeignKey("users.id", ondelete="CASCADE"))
+    user = relationship("User", back_populates="notifications")

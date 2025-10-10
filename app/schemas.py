@@ -1,7 +1,7 @@
 from pydantic import BaseModel, EmailStr
 from typing import List, Optional
 from datetime import datetime, date, time
-from .enums import UserRole, AppointmentStatus, AppointmentType
+from .enums import UserRole, AppointmentStatus, AppointmentType, NotificationType
 
 # =====================================================
 # USER SCHEMAS
@@ -153,6 +153,34 @@ class AppointmentCreate(AppointmentBase):
 class AppointmentResponse(AppointmentBase):
     id: int
     status: AppointmentStatus
+    petOwner: Optional["PetOwnerResponse"] = None
+    vet: Optional["VetResponse"] = None
+    pet: Optional["PetResponse"] = None
+
+    class Config:
+        orm_mode = True
+
+# schemas.py
+class StatusUpdate(BaseModel):
+    status: str
+
+class AppointmentReschedule(BaseModel):
+    scheduledDate: date
+    scheduledTime: time
+
+class NotificationBase(BaseModel):
+    message: str
+    type: NotificationType
+
+
+class NotificationCreate(NotificationBase):
+    user_id: int
+
+
+class NotificationResponse(NotificationBase):
+    id: int
+    is_read: bool
+    created_at: datetime
 
     class Config:
         orm_mode = True
